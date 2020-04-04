@@ -13,7 +13,7 @@ The packer template should be able to use an operating system depending on
 
 
 After a successful build, it should push that docker image to a docker hub account creating
-- a <yourDockerHubUser>/ubuntu-nginx
+- <yourDockerHubUser>/ubuntu-nginx
 - <yourDockerHubUser>/centos-nginx container.
 
 both containers need to be able to serve an index.html hello world text document via the following command:
