@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
+########################
+# Author: Rilindo Foster
+# Purpose: Automate validating and building docker images
+
 # I could add set -e to my script, but I find that introduce some unexpected silent failures
-# So I elected to catch errors as much as possible.
+# So I elected to catch errors every time I add new lines of code.
+
 DOCKER_CMD=$(which docker)
 PACKER_CMD=$(which packer)
 PACKER_TEMPLATE="docker-nginx.json"
@@ -62,6 +67,9 @@ do
   if [ ${PACKER_VALIDATION_ERROR} -ne 0 ]; then
     echo "Exiting due to build error with ${PACKER_TEMPLATE}"
     exit 1
+  else
+    docker tag "homework/nginx-${IMG}" "rilindo/${IMG}-nginx"
+    docker push "rilindo/${IMG}-nginx"
   fi
-
+  
 done

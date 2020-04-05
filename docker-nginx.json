@@ -3,7 +3,7 @@
     "source_docker_image": "{{ user `img` }}"
   },
   "builders": [{
-    "name": "nginx-{{ user `img` }}-beta",
+    "name": "nginx-{{ user `img` }}",
     "type": "docker",
     "image": "{{ user `source_docker_image` }}",
     "commit": "true",
@@ -45,7 +45,7 @@
  ],
  "post-processors": [{
    "type": "docker-tag",
-   "repository": "homework/nginx-{{ user `img` }}-beta",
+   "repository": "homework/nginx-{{ user `img` }}",
    "tag": "latest"
  }]
 }
