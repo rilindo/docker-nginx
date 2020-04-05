@@ -1,10 +1,9 @@
 {
   "variables": {
-    "source_docker_image": "{{ user `img` }}",
-    "os": "{{ user `os` }}"
+    "source_docker_image": "{{ user `img` }}"
   },
   "builders": [{
-    "name": "{{ user `os` }}-nginx ",
+    "name": "{{ user `img` }}-nginx ",
     "type": "docker",
     "image": "{{ user `source_docker_image` }}",
     "commit": "true",
