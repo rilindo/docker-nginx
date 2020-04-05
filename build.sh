@@ -34,7 +34,7 @@ do
     echo "Exiting due to inspector error with ${PACKER_TEMPLATE}"
     exit 1
   fi
-  packer validate ${PACKER_TEMPLATE}
+  packer validate  -var "img=${IMG}" ${PACKER_TEMPLATE}
   VALIDATION_ERROR=$?
   if [ ${VALIDATION_ERROR} -ne 0 ]; then
     echo "Exiting due to validation error with ${PACKER_TEMPLATE}"
