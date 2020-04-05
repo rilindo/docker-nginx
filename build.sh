@@ -27,6 +27,8 @@ fi
 
 for IMG in ${DOCKER_IMAGE_IMAGES}
 do
+  OS=$(echo ${IMG} | awk -F: '{print $1}')
+  echo ${OS}
   echo ${IMG}
   packer inspect ${PACKER_TEMPLATE}
   INSPECTION_ERROR=$?
@@ -34,7 +36,7 @@ do
     echo "Exiting due to inspector error with ${PACKER_TEMPLATE}"
     exit 1
   fi
-  packer validate  -var "img=${IMG}" ${PACKER_TEMPLATE}
+  packer validate  -var "img=${IMG}" -var "img=${OS}" ${PACKER_TEMPLATE}
   VALIDATION_ERROR=$?
   if [ ${VALIDATION_ERROR} -ne 0 ]; then
     echo "Exiting due to validation error with ${PACKER_TEMPLATE}"
