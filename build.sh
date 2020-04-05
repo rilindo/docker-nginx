@@ -63,4 +63,5 @@ do
     echo "Exiting due to build error with ${PACKER_TEMPLATE}"
     exit 1
   fi
+
 done

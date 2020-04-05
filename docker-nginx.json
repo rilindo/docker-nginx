@@ -3,15 +3,14 @@
     "source_docker_image": "{{ user `img` }}"
   },
   "builders": [{
-    "name": "{{ user `img` }}-nginx-beta",
+    "name": "nginx-{{ user `img` }}-beta",
     "type": "docker",
     "image": "{{ user `source_docker_image` }}",
     "commit": "true",
     "changes": [
-      "EXPOSE 80 443",
+      "EXPOSE 80",
       "ONBUILD RUN date",
-      "CMD [\"nginx\", \"-g\", \"daemon off;\"]",
-      "ENTRYPOINT /var/www/start.sh"
+      "ENTRYPOINT /usr/local/bin/entrypoint.sh"
     ]
   }],
  "provisioners": [
@@ -31,11 +30,22 @@
      "type": "ansible-local",
      "playbook_file": "nginx.yml",
      "playbook_dir": "."
+   },
+   {
+     "type": "file",
+     "source": "entrypoint.sh",
+     "destination": "/usr/local/bin/entrypoint.sh"
+   },
+   {
+     "inline": [
+       "chmod +x /usr/local/bin/entrypoint.sh"
+     ],
+     "type": "shell"
    }
  ],
  "post-processors": [{
    "type": "docker-tag",
-   "repository": "homework/{{ user `img` }}-nginx-beta",
+   "repository": "homework/nginx-{{ user `img` }}-beta",
    "tag": "latest"
  }]
 }
