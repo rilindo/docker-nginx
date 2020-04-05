@@ -5,6 +5,9 @@
 PACKER_CMD=$(which packer)
 DOCKER_CMD=$(which docker)
 PACKER_TEMPLATE="docker-nginx.json"
+
+DOCKER_IMAGE_IMAGES="ubuntu:latest centos:latest"
+
 # Check to see if commands are in the path.
 
 if [ -z "${PACKER_CMD}" ]; then
@@ -21,3 +24,8 @@ if [ ! -e "${PACKER_TEMPLATE}" ]; then
   echo "Packer template does not appear to exists in the current directory."
   exit 1
 fi
+
+for IMG in ${DOCKER_IMAGE_IMAGES}
+do
+  echo ${IMG}
+done
