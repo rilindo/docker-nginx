@@ -9,7 +9,7 @@ ANSIBLE_PLAYBOOK_FILE="nginx.yml"
 
 # Note that by specifying just the os, it will pull the latest one by default
 
-DOCKER_IMAGE_IMAGES="ubuntu centos"
+DOCKER_IMAGE_IMAGES="centos ubuntu"
 
 # Check to see if commands are in the path.
 
@@ -35,23 +35,32 @@ fi
 
 for IMG in ${DOCKER_IMAGE_IMAGES}
 do
-  echo ${IMG}
+
   ${PACKER_CMD} inspect ${PACKER_TEMPLATE}
   INSPECTION_ERROR=$?
   if [ ${INSPECTION_ERROR} -ne 0 ]; then
     echo "Exiting due to inspector error with ${PACKER_TEMPLATE}"
     exit 1
   fi
+
   ${PACKER_CMD} validate -var "img=${IMG}" ${PACKER_TEMPLATE}
   PACKER_VALIDATION_ERROR=$?
   if [ ${PACKER_VALIDATION_ERROR} -ne 0 ]; then
     echo "Exiting due to validation error with ${PACKER_TEMPLATE}"
     exit 1
   fi
+
   ${ANSIBLE_PLAYBOOK_CMD} --syntax-check ${ANSIBLE_PLAYBOOK_FILE}
   ANSIBLE_PLAYBOOK_VALIDATION_ERROR=$?
   if [ ${ANSIBLE_PLAYBOOK_VALIDATION_ERROR} -ne 0 ]; then
     echo "Exiting due to validation error with ${PACKER_TEMPLATE}"
+    exit 1
+  fi
+
+  ${PACKER_CMD} build -var "img=${IMG}" ${PACKER_TEMPLATE}
+  PACKER_BUILD_ERROR=$?
+  if [ ${PACKER_VALIDATION_ERROR} -ne 0 ]; then
+    echo "Exiting due to build error with ${PACKER_TEMPLATE}"
     exit 1
   fi
 done

@@ -3,17 +3,12 @@
     "source_docker_image": "{{ user `img` }}"
   },
   "builders": [{
-    "name": "{{ user `img` }}-nginx ",
+    "name": "{{ user `img` }}-nginx-beta",
     "type": "docker",
     "image": "{{ user `source_docker_image` }}",
     "commit": "true",
     "changes": [
-      "USER www-data",
-      "WORKDIR /var/www",
-      "ENV HOSTNAME www.example.com",
-      "VOLUME /test1 /test2",
       "EXPOSE 80 443",
-      "LABEL version=1.0",
       "ONBUILD RUN date",
       "CMD [\"nginx\", \"-g\", \"daemon off;\"]",
       "ENTRYPOINT /var/www/start.sh"
@@ -21,8 +16,26 @@
   }],
  "provisioners": [
    {
+     "type": "file",
+     "source": "install_ansible.sh",
+     "destination": "/tmp/install.sh"
+   },
+   {
+     "inline": [
+       "chmod +x /tmp/install.sh",
+       "/tmp/install.sh"
+     ],
+     "type": "shell"
+   },
+   {
      "type": "ansible-local",
-     "playbook_file": "nginx.yml"
+     "playbook_file": "nginx.yml",
+     "playbook_dir": "."
    }
-  ]
+ ],
+ "post-processors": [{
+   "type": "docker-tag",
+   "repository": "homework/{{ user `img` }}-nginx-beta",
+   "tag": "latest"
+ }]
 }
