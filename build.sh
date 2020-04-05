@@ -28,4 +28,16 @@ fi
 for IMG in ${DOCKER_IMAGE_IMAGES}
 do
   echo ${IMG}
+  packer inspect ${PACKER_TEMPLATE}
+  INSPECTION_ERROR=$?
+  if [ ${INSPECTION_ERROR} -ne 0 ]; then
+    echo "Exiting due to inspector error with ${PACKER_TEMPLATE}"
+    exit 1
+  fi
+  packer validate ${PACKER_TEMPLATE}
+  VALIDATION_ERROR=$?
+  if [ ${VALIDATION_ERROR} -ne 0 ]; then
+    echo "Exiting due to validation error with ${PACKER_TEMPLATE}"
+    exit 1
+  fi
 done
